@@ -12,7 +12,6 @@ const INF_I64: i64 = 1_i64 << 60;
 const INF_I128: i128 = 1_i128 << 120;
 const INF_USIZE: usize = usize::MAX / 4;
 
-// 既存コードとの互換用。新規コードでは型付き名を推奨。
 const INF: i64 = INF_I64;
 const UINF: usize = INF_USIZE;
 const INF128: i128 = INF_I128;
