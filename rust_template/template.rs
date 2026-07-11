@@ -16,9 +16,9 @@ const INF: i64 = INF_I64;
 const UINF: usize = INF_USIZE;
 const INF128: i128 = INF_I128;
 
-const MOD_1E9_7: i64 = 1_000_000_007;
-const MOD_998: i64 = 998_244_353;
-const MOD: i64 = MOD_998;
+const MOD1: i64 = 1_000_000_007;
+const MOD9: i64 = 998_244_353;
+const MOD: i64 = MOD9;
 const UMOD: usize = MOD as usize;
 
 // =============================================================================
