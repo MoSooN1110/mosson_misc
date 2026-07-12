@@ -71,6 +71,97 @@ macro_rules! rc {
         let mut $x: Vec<char> = read::<String>().chars().collect();
     };
 }
+macro_rules! rs {
+    ($($x:ident),+ $(,)?) => {
+        let values = read_vec::<String>();
+        let mut iter = values.into_iter();
+        $(
+            let mut $x = iter
+                .next()
+                .expect("入力の要素数が不足しています");
+        )+
+    };
+}
+macro_rules! rvu {
+    ($x:ident $(,)?) => {
+        let mut $x = read_vec::<usize>();
+    };
+}
+macro_rules! rvi {
+    ($x:ident $(,)?) => {
+        let mut $x = read_vec::<i64>();
+    };
+}
+
+macro_rules! graph_read {
+    // 重みなし・無向グラフ
+    ($n:expr, $m:expr, unweighted, undirected) => {{
+        let mut graph = vec![Vec::<usize>::new(); $n];
+
+        for _ in 0..$m {
+            ru!(a, b);
+            a -= 1;
+            b -= 1;
+
+            graph[a].push(b);
+            graph[b].push(a);
+        }
+
+        graph
+    }};
+
+    // 重みなし・有向グラフ
+    ($n:expr, $m:expr, unweighted, directed) => {{
+        let mut graph = vec![Vec::<usize>::new(); $n];
+
+        for _ in 0..$m {
+            ru!(a, b);
+            a -= 1;
+            b -= 1;
+
+            graph[a].push(b);
+        }
+
+        graph
+    }};
+
+    // 重みつき・無向グラフ
+    ($n:expr, $m:expr, weighted, undirected, $weight_type:ty) => {{
+        let mut graph = vec![Vec::<(usize, $weight_type)>::new(); $n];
+
+        for _ in 0..$m {
+            ru!(a, b, c);
+            a -= 1;
+            b -= 1;
+
+            graph[a].push((b, c));
+            graph[b].push((a, c));
+        }
+
+        graph
+    }};
+
+    // 重みつき・有向グラフ
+    ($n:expr, $m:expr, weighted, directed, $weight_type:ty) => {{
+        let mut graph = vec![Vec::<(usize, $weight_type)>::new(); $n];
+
+        for _ in 0..$m {
+            ru!(mut a, mut b, c);
+            a -= 1;
+            b -= 1;
+
+            graph[a].push((b, c));
+        }
+
+        graph
+    }};
+
+    // 既定値: 重みなし・無向グラフ
+    ($n:expr, $m:expr) => {
+        graph_read!($n, $m, unweighted, undirected)
+    };
+}
+
 // =============================================================================
 // Output / Debug
 // =============================================================================
@@ -115,7 +206,7 @@ macro_rules! yesno {
     };
 }
 
-macro_rules! debug {
+macro_rules! d {
     ($($value:expr),+ $(,)?) => {
         #[cfg(debug_assertions)]
         {
@@ -456,6 +547,7 @@ macro_rules! upper_bound_by_key {
         ($slice).partition_point(|x| key_of(x) <= key)
     }};
 }
+// UTIL
 macro_rules! neighbors4 {
     ($y:expr, $x:expr, $h:expr, $w:expr $(,)?) => {{
         const DY: [isize; 4] = [-1, 0, 1, 0];
@@ -491,6 +583,23 @@ macro_rules! run_length {
         result
     }};
 }
+macro_rules! coordinate_compress {
+    ($iter:expr $(,)?) => {{
+        let values: Vec<_> = ($iter).into_iter().collect();
+
+        let mut coordinates = values.clone();
+        coordinates.sort();
+        coordinates.dedup();
+
+        let compressed = values
+            .iter()
+            .map(|value| coordinates.binary_search(value).unwrap())
+            .collect::<Vec<_>>();
+
+        (compressed, coordinates)
+    }};
+}
+
 // =============================================================================
 // Map / Set literals and counters
 // =============================================================================
@@ -679,6 +788,21 @@ macro_rules! i {
             let mut $x = 0i64;
         )+
     };
+}
+macro_rules! idx1 {
+    ($x:expr) => {
+        ($x as usize) - 1
+    };
+}
+
+macro_rules! sum {
+    ($iter:expr $(,)?) => {{
+        let mut sum = 0;
+        for value in $iter {
+            sum += value;
+        }
+        sum
+    }};
 }
 
 fn main() {}
